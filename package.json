@@ -1,0 +1,152 @@
+{
+  "name": "deepseek-fim-autocomplete",
+  "displayName": "DeepSeek FIM Autocomplete",
+  "description": "Tiny inline autocomplete for VS Code using DeepSeek Fill-In-Middle completions.",
+  "version": "0.0.1",
+  "publisher": "local",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "AI",
+    "Other"
+  ],
+  "keywords": [
+    "deepseek",
+    "fim",
+    "autocomplete",
+    "inline completion",
+    "ai"
+  ],
+  "activationEvents": [
+    "onStartupFinished",
+    "onCommand:deepseekFimAutocomplete.triggerInlineCompletion",
+    "onCommand:deepseekFimAutocomplete.openSettings"
+  ],
+  "main": "./out/src/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "deepseekFimAutocomplete.triggerInlineCompletion",
+        "title": "DeepSeek FIM: Trigger Inline Completion",
+        "category": "DeepSeek FIM"
+      },
+      {
+        "command": "deepseekFimAutocomplete.openSettings",
+        "title": "DeepSeek FIM: Open Settings",
+        "category": "DeepSeek FIM"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "deepseekFimAutocomplete.triggerInlineCompletion",
+        "key": "ctrl+alt+space",
+        "mac": "cmd+alt+space",
+        "when": "editorTextFocus && !inlineSuggestionVisible"
+      }
+    ],
+    "configuration": {
+      "title": "DeepSeek FIM Autocomplete",
+      "properties": {
+        "deepseekFimAutocomplete.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable DeepSeek FIM inline autocomplete."
+        },
+        "deepseekFimAutocomplete.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "DeepSeek API key used as a Bearer token for FIM requests.",
+          "scope": "application"
+        },
+        "deepseekFimAutocomplete.baseUrl": {
+          "type": "string",
+          "default": "https://api.deepseek.com/beta",
+          "description": "DeepSeek beta API base URL. The extension appends /completions."
+        },
+        "deepseekFimAutocomplete.model": {
+          "type": "string",
+          "default": "deepseek-v4-pro",
+          "description": "DeepSeek FIM model name."
+        },
+        "deepseekFimAutocomplete.maxTokens": {
+          "type": "number",
+          "default": 128,
+          "minimum": 1,
+          "maximum": 4096,
+          "description": "Maximum number of tokens to request for each completion."
+        },
+        "deepseekFimAutocomplete.temperature": {
+          "type": "number",
+          "default": 0.2,
+          "minimum": 0,
+          "maximum": 2,
+          "description": "Sampling temperature for completions."
+        },
+        "deepseekFimAutocomplete.triggerMode": {
+          "type": "string",
+          "default": "automatic",
+          "enum": [
+            "automatic",
+            "manual"
+          ],
+          "enumDescriptions": [
+            "Request suggestions automatically while typing and from the manual trigger command.",
+            "Only request suggestions when DeepSeek FIM: Trigger Inline Completion is invoked."
+          ],
+          "description": "Controls when DeepSeek FIM requests are made."
+        },
+        "deepseekFimAutocomplete.debounceMs": {
+          "type": "number",
+          "default": 250,
+          "minimum": 0,
+          "maximum": 5000,
+          "description": "Delay before automatic completion requests, in milliseconds."
+        },
+        "deepseekFimAutocomplete.timeoutMs": {
+          "type": "number",
+          "default": 15000,
+          "minimum": 1000,
+          "maximum": 120000,
+          "description": "HTTP timeout for DeepSeek requests, in milliseconds."
+        },
+        "deepseekFimAutocomplete.maxPrefixChars": {
+          "type": "number",
+          "default": 6000,
+          "minimum": 0,
+          "maximum": 200000,
+          "description": "Maximum characters before the cursor sent as the FIM prompt."
+        },
+        "deepseekFimAutocomplete.maxSuffixChars": {
+          "type": "number",
+          "default": 2000,
+          "minimum": 0,
+          "maximum": 200000,
+          "description": "Maximum characters after the cursor sent as the FIM suffix."
+        },
+        "deepseekFimAutocomplete.stopSequences": {
+          "type": "array",
+          "default": [],
+          "description": "Optional stop sequences for DeepSeek completions.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "npm run compile && node --test out/test/*.test.js",
+    "package": "npm run compile && vsce package --no-dependencies --allow-missing-repository"
+  },
+  "devDependencies": {
+    "@types/node": "20.x",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.3.2",
+    "typescript": "^5.8.3"
+  }
+}
