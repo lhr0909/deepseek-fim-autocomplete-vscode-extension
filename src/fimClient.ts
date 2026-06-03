@@ -54,7 +54,12 @@ export async function requestFimCompletion(
   const timeoutController = new AbortController();
   const timeout = setTimeout(() => timeoutController.abort(), options.timeoutMs);
   const abortRequest = () => timeoutController.abort();
-  abortSignal?.addEventListener("abort", abortRequest);
+
+  if (abortSignal?.aborted) {
+    timeoutController.abort();
+  } else {
+    abortSignal?.addEventListener("abort", abortRequest);
+  }
 
   try {
     const response = await fetchImplementation(buildCompletionsUrl(options.baseUrl), {
