@@ -2,17 +2,28 @@ import * as vscode from "vscode";
 import { configurationSection, DeepSeekFimSettings, readDeepSeekFimSettings } from "./config";
 import { selectFimContext } from "./documentContext";
 import { FimCompletionOptions, requestFimCompletion } from "./fimClient";
+import { RequestActivity } from "./requestActivity";
 
 type CompletionRequester = (options: FimCompletionOptions, abortSignal?: AbortSignal) => Promise<string>;
 
+interface InlineCompletionProviderDependencies {
+  readSettings?: () => DeepSeekFimSettings;
+  requestCompletion?: CompletionRequester;
+  requestActivity?: RequestActivity;
+}
+
 export class DeepSeekFimInlineCompletionProvider implements vscode.InlineCompletionItemProvider {
+  private readonly readSettings: () => DeepSeekFimSettings;
+  private readonly requestCompletion: CompletionRequester;
+  private readonly requestActivity?: RequestActivity;
   private missingApiKeyWarningShown = false;
 
-  public constructor(
-    private readonly readSettings: () => DeepSeekFimSettings = () =>
-      readDeepSeekFimSettings(vscode.workspace.getConfiguration(configurationSection)),
-    private readonly requestCompletion: CompletionRequester = requestFimCompletion,
-  ) {}
+  public constructor(dependencies: InlineCompletionProviderDependencies = {}) {
+    this.readSettings =
+      dependencies.readSettings ?? (() => readDeepSeekFimSettings(vscode.workspace.getConfiguration(configurationSection)));
+    this.requestCompletion = dependencies.requestCompletion ?? requestFimCompletion;
+    this.requestActivity = dependencies.requestActivity;
+  }
 
   public async provideInlineCompletionItems(
     document: vscode.TextDocument,
@@ -64,20 +75,25 @@ export class DeepSeekFimInlineCompletionProvider implements vscode.InlineComplet
         settings.maxSuffixChars,
       );
 
-      return await this.requestCompletion(
-        {
-          apiKey: settings.apiKey,
-          baseUrl: settings.baseUrl,
-          model: settings.model,
-          prefix,
-          suffix,
-          maxTokens: settings.maxTokens,
-          temperature: settings.temperature,
-          timeoutMs: settings.timeoutMs,
-          stopSequences: settings.stopSequences,
-        },
-        abortController.signal,
-      );
+      const finishRequestActivity = this.requestActivity?.start() ?? (() => undefined);
+      try {
+        return await this.requestCompletion(
+          {
+            apiKey: settings.apiKey,
+            baseUrl: settings.baseUrl,
+            model: settings.model,
+            prefix,
+            suffix,
+            maxTokens: settings.maxTokens,
+            temperature: settings.temperature,
+            timeoutMs: settings.timeoutMs,
+            stopSequences: settings.stopSequences,
+          },
+          abortController.signal,
+        );
+      } finally {
+        finishRequestActivity();
+      }
     } catch (error) {
       if (!token.isCancellationRequested) {
         console.error("DeepSeek FIM autocomplete failed", error);

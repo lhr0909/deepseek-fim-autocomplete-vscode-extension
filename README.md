@@ -6,6 +6,7 @@ A deliberately tiny VS Code extension that provides inline autocomplete suggesti
 
 - TypeScript extension code.
 - VS Code inline completions at the cursor.
+- Status bar indicator that spins while DeepSeek requests are in flight.
 - Prefix and suffix context sent to DeepSeek FIM.
 - Simple JSON settings for API key, model, base URL, token limit, temperature, trigger mode, timeout, and context size.
 - Unit tests for the core request/config/context logic.
