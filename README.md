@@ -61,7 +61,7 @@ VSCE_PERSONAL_ACCESS_TOKEN=your-vscode-marketplace-personal-access-token
 VSCE_PUBLISHER=simon-liang
 ```
 
-Then validate the publish configuration without publishing:
+The publish script loads `.env` with `dotenv/config`. Then validate the publish configuration without publishing:
 
 ```bash
 npm run publish:vsce:dry
