@@ -41,7 +41,7 @@ To run inside VS Code, open this folder and press `F5` to start an Extension Dev
 
 ```bash
 npm run package
-code --install-extension deepseek-fim-autocomplete-0.0.2.vsix
+code --install-extension deepseek-fim-autocomplete-0.0.3.vsix
 ```
 
 After installing, reload VS Code and set `deepseekFimAutocomplete.apiKey` in `settings.json`.
