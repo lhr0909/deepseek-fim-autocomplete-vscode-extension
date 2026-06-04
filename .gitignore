@@ -4,3 +4,5 @@ out/
 *.vsix
 *.log
 .DS_Store
+
+.env

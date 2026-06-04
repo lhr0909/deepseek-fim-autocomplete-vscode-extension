@@ -2,8 +2,8 @@
   "name": "deepseek-fim-autocomplete",
   "displayName": "DeepSeek FIM Autocomplete",
   "description": "Tiny inline autocomplete for VS Code using DeepSeek Fill-In-Middle completions.",
-  "version": "0.0.1",
-  "publisher": "local",
+  "version": "0.0.2",
+  "publisher": "simon-liang",
   "license": "MIT",
   "engines": {
     "vscode": "^1.85.0"
