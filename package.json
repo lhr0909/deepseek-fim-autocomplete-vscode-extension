@@ -145,14 +145,15 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "test": "npm run compile && node --test out/test/*.test.js",
-    "package": "npm run compile && vsce package --no-dependencies --allow-missing-repository",
-    "publish:vsce": "node scripts/publish-vsce.js",
-    "publish:vsce:dry": "node scripts/publish-vsce.js --dry-run"
+    "package": "npm run compile && vsce package --no-dependencies",
+    "publish:vsce": "node scripts/publish-vsce.mjs",
+    "publish:vsce:dry": "node scripts/publish-vsce.mjs --dry-run"
   },
   "devDependencies": {
     "@types/node": "20.x",
     "@types/vscode": "^1.85.0",
     "@vscode/vsce": "^3.9.2",
+    "dotenv": "^17.4.2",
     "typescript": "^5.8.3"
   }
 }
