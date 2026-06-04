@@ -41,7 +41,41 @@ To run inside VS Code, open this folder and press `F5` to start an Extension Dev
 
 ```bash
 npm run package
-code --install-extension deepseek-fim-autocomplete-0.0.1.vsix
+code --install-extension deepseek-fim-autocomplete-0.0.2.vsix
 ```
 
 After installing, reload VS Code and set `deepseekFimAutocomplete.apiKey` in `settings.json`.
+
+## Publish to the VS Code Marketplace
+
+Create `.env` from `.env.example` and fill in your marketplace token:
+
+```bash
+cp .env.example .env
+```
+
+Required keys:
+
+```dotenv
+VSCE_PERSONAL_ACCESS_TOKEN=your-vscode-marketplace-personal-access-token
+VSCE_PUBLISHER=simon-liang
+```
+
+Then validate the publish configuration without publishing:
+
+```bash
+npm run publish:vsce:dry
+```
+
+Publish the current package version:
+
+```bash
+npm run publish:vsce
+```
+
+You can pass normal `vsce publish` arguments after `--`, for example:
+
+```bash
+npm run publish:vsce -- patch
+npm run publish:vsce -- --pre-release
+```
